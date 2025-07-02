@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  {% load static %}
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/agriventure.png' %}">
+  <title>Agriventure</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    nav{
+      background-color:  #006d5b;
+    }
+    .one-edge-shadow {
+              box-shadow: 0 8px 2px -5px rgb(246, 245, 245);
+}
+.display-8{
+  font-weight: 200;
+  font-size: 30px;
+  font-colour: $teal-200;
+}
+.nav-link:hover{
+  transform: translateY(-3px);
+  transition: all ease-in-out 0.3s;
+}
+.card:hover{
+  transform: translateY(-10px);
+  transition: all ease-in-out 0.3s;
+}
+.rounded:hover{
+  transform: translateY(-8px);
+  transition: all ease-in-out 0.3s;
+}
+
+.nav-link:after {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: #fff;
+  transition: width 0.4s ease 0s, left 0.4s ease 0s;
+  width: 0;
+}
+.nav-link:hover:after {
+  width: 100%;
+  left: 0;
+}
+
+  </style>
+
+  <!-------------------------->
+
+  <!-------------------------->
+</head>
+
+<body>
+  <!-- navbar -->
+
+<nav class="one-edge-shadow navbar navbar-dark sticky-top navbar navbar-expand-lg text-white"> <a class="navbar-brand ms-3 h1" href="/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    {% load static %}
+
+    <img src="{% static 'img/agriventure.png' %}" alt="Logo" style="width:80px;height:80px,color:#ffffff;">  Agriventure</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+
+          <a class="nav-link mx-5" href="/store"><i class="fa fa-medkit" style="font-size:20px;color:white"></i> Store <span class="sr-only">(current)</span></a>
+        </li>
+
+          </ul>
+      <ul class=" navbar-nav my-2 my-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" href="/cart"><i class="fa fa-cart-plus" style="font-size:20px;color:white"></i>
+            <span class="badge badge-success">{{request.session.cart.keys|length}}</span>
+            <span class="sr-only">(current)</span></a>
+        </li>
+
+        {% if request.session.customer %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/upload"><i class="fa fa-receipt" style="color: #fafafa;"></i> Upload</a>
+        </li>
+        <li class="nav-item active ">
+          <a class="nav-link" href="/orders"><i class="fa fa-cart-arrow-down" style="font-size:20px;color:white"></i> Orders & Services<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active ">
+          <a class="nav-link" href="/logout"><i class="fa fa-sign-out-alt" style="font-size:20px;color:white"></i> Logout<span class="sr-only">(current)</span></a>
+        </li>
+        {% else %}
+
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup"><i class="fa fa-sign-in-alt" style="font-size:20px;color:white"></i> Signup<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/login"><i class="fa fa-sign-in-alt" style="font-size:20px;color:white"></i>User Login<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/admin"><i class="fa fa-sign-in-alt" style="font-size:20px;color:white"></i> Admin Login<span class="sr-only">(current)</span></a>
+        </li>
+
+        {% endif %}
+
+      </ul>
+
+    </div>
+  </nav>
+  <!---->
+  {% block content %}   {% endblock %}
+
+
+
+  <!------------------------------------------->
+
+<!-- <div class="container"> -->
+
+  <footer class="py-5 mx-5">
+    <a><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide|Sofia|Trirong"></a>
+    <div class="row"  >
+<!--      <div class="col-6 col-md-2 mb-3">-->
+<!--        <h5 style="text-shadow: 2px 2px 5px #006d5b;">OUR POLICIES</h5>-->
+<!--        <ul class="nav flex-column">-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+
+<!--      <div class="col-6 col-md-2 mb-3">-->
+<!--        <h5 style="text-shadow: 2px 2px 5px #006d5b;">SHOPPING</h5>-->
+<!--        <ul class="nav flex-column">-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>-->
+<!--          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+
+      <div class="col-6 col-md-2 mb-3">
+        <h5 style="text-shadow: 2px 2px 5px #006d5b;">SOCIAL</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-family: 'Sofia', sans-serif; font-weight: bold;">Facebook</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-family: 'Sofia', sans-serif; font-weight: bold;">Instagram</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-family: 'Sofia', sans-serif; font-weight: bold;">LinkedIn</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-family: 'Sofia', sans-serif; font-weight: bold;">Twitter</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted"></a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-5 offset-md-1 mb-3">
+        <form>
+          <h5 style="text-shadow: 2px 2px 5px #006d5b;">Subscribe :</h5>
+          <p>Get a free subscription to our health and fitness tip and stay tuned to our latest offers</p>
+          <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+            {% comment %} <label for="newsletter1" class="visually-hidden"></label> {% endcomment %}
+            <input id="newsletter1" type="text" class="form-control mx-2" placeholder="Email address">
+            <button class="btn btn-outline-success" style="background-color:#006d5b" type="button">Subscribe</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="jumbotron jumbotron">
+      <p>&copy; 2024, Inc. All rights reserved.</p>
+    </div>
+
+  </footer>
+<!-- </div> -->
+
+
+  <!------------------------------------------->
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2025/02/04/04/20250204042015-QYPMRYTV.js"></script>
+</body>
+
+</html>

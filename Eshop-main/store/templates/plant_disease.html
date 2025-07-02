@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background: #f3f4f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+        border: none;
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        background: linear-gradient(135deg, #4caf50, #2e7d32);
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .btn-success {
+        background: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
+        border: none;
+        font-weight: bold;
+        padding: 0.6rem;
+        border-radius: 50px;
+        transition: 0.3s ease;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(to right, #38f9d7 0%, #43e97b 100%);
+        transform: scale(1.03);
+    }
+
+    .result-section {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #preview {
+        max-height: 300px;
+        border-radius: 10px;
+        margin-top: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h3 class="mb-0">🌿 Plant Disease Detection</h3>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data" class="text-center">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Upload a plant leaf image:</label>
+                            <input class="form-control" type="file" name="image" id="formFile" accept="image/*" required onchange="previewImage(event)">
+                        </div>
+                        <img id="preview" class="img-fluid" style="display: none;" />
+                        <button type="submit" class="btn btn-success w-100 mt-3">🌱 Predict Disease</button>
+                    </form>
+
+                    {% if result %}
+                        <div class="mt-4 text-center result-section">
+                            <h5 class="text-success">🧪 Prediction Result</h5>
+                            <p class="fw-bold">{{ result }}</p>
+                            {% if supplement_name %}
+                                <h6>Recommended Supplement:</h6>
+                                <p>{{ supplement_name }}: {{ supplement_reason }}</p>
+                                <img src="{{ supplement_image }}" alt="Supplement Image" class="img-fluid mt-3" />
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Live preview of image
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const output = document.getElementById('preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+{% endblock %}

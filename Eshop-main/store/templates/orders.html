@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+
+<style>
+    #progress-bar {
+      display: none;
+      width: 100%;
+      height: 10px;
+      background-color: #ccc;
+    }
+
+    #progress-bar-fill {
+      height: 100%;
+      background-color: #4caf50;
+    }
+
+    #message-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+</style>
+
+<div class="container">
+   <div class="border rounded p-4 m-4">
+        <p class="display-4 pl-4 ml-4">Your Orders</p>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sno.</th>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for order in orders %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td><img style="height: 80px;" class="rounded-circle" src="{{order.product.image.url}}" alt=""></td>
+                    <td>{{order.product.name}}</td>
+                    <td>{{order.date}}</td>
+                    <td>{{order.price|currency}}</td>
+                    <td>{{order.quantity}}</td>
+                    <td>{{order.quantity|multiply:order.price|currency}}</td>
+                    {% if order.status %}
+                    <td><small class="badge badge text-white" style="background-color:#006d5b">Completed</small></td>
+                    {%else%}
+                    <td><small class="badge badge-warning">Pending</small></td>
+                    {% endif %}
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+   </div>
+</div>
+
+<div class="container">
+   <div class="border rounded p-4 m-4">
+        <p class="display-4 pl-4 ml-4">Services</p>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Weather Showing & Irrigation Suggestion</th>
+                    <th>Crop Suggestion</th>
+                    <th>Control Pump</th>
+                    <th>Ai Plant Diseases prediction</th>
+                    <th>Crop Type Analysis</th>
+                    <th>CCTV Monitoring</th>
+                    <th>Scan & Get Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><!-- Area Selection Button -->
+                        <button><a href="{% url 'index1' %}">Click me</a></button>
+                    </td>
+
+                    <td><!-- Crop Suggestion -->
+                        <button><a href="{% url 'index2' %}">Click me</a></button>
+                    </td>
+
+                    <td><!-- Pump Control Button -->
+                        <button><a href="https://blynk.cloud/dashboard">Click me</a></button>
+                    </td>
+                    <td><!-- Ai Plant Diseases prediction -->
+                        <button><a href="{% url 'plant_disease' %}">Click me</a></button>
+                    </td>
+                    <!-- Crop Type Analysis -->
+                    <td>
+                      <button><a href="{% url 'crop_type' %}">Click me</a></button>
+                  </td>
+                  
+                    <td><!-- CCTV -->
+                        <button><a href="https://www.earthcam.com/usa//illinois/lovington/?cam=fitzgeraldfarm">Click me</a></button>
+                    </td>
+                    <td><!-- Scan -->
+                        <button><a href="https://lens.google.com/search?p=AbrfA8qbPNJs9CNJC7feTgBdKq8SBt6dZmXLbc3UCEXGSpqAS85L&plm=ChAIDxIMCOfJu68GEOjvj6ECChAIGRIMCOfJu68GEOj0t6ECChAIGhIMCOfJu68GENiLwKEC">Click me</a></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+   </div>
+</div>
+
+<script>
+  let progressInterval;
+  let progressBarWidth = 0;
+
+  document.addEventListener("contextmenu", handleRightClick);
+  document.addEventListener("mousedown", handleLeftClick);
+
+  function handleButtonClick(event) {
+    startProgress();
+  }
+
+  function startProgress() {
+    resetProgressBar();
+    document.getElementById("progressBar").style.display = "block";
+    progressInterval = setInterval(() => {
+      progressBarWidth += 2; // Adjust the increment as needed
+      if (progressBarWidth <= 100) {
+        updateProgressBar();
+      } else {
+        clearInterval(progressInterval);
+        hideProgressBar();
+      }
+    }, 50); // Adjust the interval as needed
+  }
+
+  function updateProgressBar() {
+    const progressBarFill = document.getElementById("progressBarFill");
+    progressBarFill.style.width = progressBarWidth + "%";
+  }
+
+  function resetProgressBar() {
+    progressBarWidth = 0;
+    document.getElementById("progressBarFill").style.width = "0%";
+  }
+
+  function hideProgressBar() {
+    document.getElementById("progressBar").style.display = "none";
+    clearInterval(progressInterval);
+    showMessage();
+  }
+
+  function showMessage() {
+    const popup = document.getElementById("messagePopup");
+    popup.innerHTML = "<p>Reload the page to see the message.</p><button onclick='reloadPage()'>OK</button>";
+    popup.style.display = "block";
+  }
+
+  function reloadPage() {
+    location.reload();
+  }
+
+  function captureImage() {
+    const video = document.getElementById('camera');
+    const canvas = document.getElementById('canvas');
+    const capturedImage = document.getElementById('capturedImage');
+
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Draw video frame onto canvas
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert canvas to image data URL
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Set captured image source
+    capturedImage.src = dataURL;
+    capturedImage.style.display = 'block';
+
+    // Stop video stream
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.style.display = 'none';
+
+    // Hide the message and captured image after 5 seconds and reload the page
+    setTimeout(() => {
+      document.getElementById("messagePopup").style.display = "none";
+      document.getElementById("capturedImage").style.display = "none";
+      location.reload(); // Reload the page
+    }, 5000);
+}
+
+
+  function showCaptureButton() {
+    const video = document.getElementById('camera');
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(stream) {
+        video.srcObject = stream;
+        video.play();
+        document.getElementById("captureButtonContainer").style.display = "block";
+      })
+      .catch(function(error) {
+        console.error('Error accessing the camera:', error);
+      });
+  }
+
+  function handleRightClick(event) {
+    event.preventDefault();
+    document.getElementById("messagePopup").innerHTML = "<p>You should on the pump.</p><button onclick='reloadPage()'>OK</button>";
+    document.getElementById("messagePopup").style.display = "block";
+    captureImage();
+  }
+
+  function handleLeftClick(event) {
+    if (event.button === 0) { // 0 indicates left click
+      event.preventDefault();
+      document.getElementById("messagePopup").innerHTML = "<p>You should not on the pump.</p><button onclick='reloadPage()'>OK</button>";
+      document.getElementById("messagePopup").style.display = "block";
+      captureImage();
+    }
+  }
+</script>
+
+{% endblock %}

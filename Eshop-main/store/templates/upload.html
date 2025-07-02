@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+
+{% load custom_filter %}
+<!-- body -->
+{% if messages %}
+{% for message in messages%}
+
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+	<strong>{{ message }}</strong>
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times</span></button>
+  </div>
+  {% endfor %}
+  {% endif %} 
+
+<div class="container-fluid mt-3 ">
+	<div class="row">
+		<!-- filter -->
+		<!-- all products -->
+		<div id='' class="col-lg-10 mx-auto my-5">
+			<!---------------------------------------------------->
+			<img src="https://www.netmeds.com/images/cms/wysiwyg/category/v2/img/diabetic-care.jpg" class="rounded float-start mx-3" height="160px" alt="Face Wash And Cleaners">
+            <img src="https://www.netmeds.com/images/cms/wysiwyg/category/v2/img/lung-care.jpg" class="rounded float-start mx-3" height="160px" alt="Dressing">
+            <img src="https://www.netmeds.com/images/cms/wysiwyg/category/v2/img/stomach-care.jpg" class="rounded float-start mx-3" height="160px" alt="Pain Relief Application">
+			<img src="https://www.netmeds.com/images/cms/wysiwyg/category/v2/img/women-s-care.jpg" class="rounded float-start mx-3" height="160px" alt="Body Lotion">
+			<img src="https://www.netmeds.com/images/cms/wysiwyg/category/v2/img/cold-and-fever.jpg" class="rounded float-start mx-3" height="160px" alt="Body Lotion">
+			<img src="https://www.netmeds.com/images/cms/wysiwyg/category/v2/img/bone-and-joint-pain.jpg" class="rounded float-start mx-3" height="160px" alt="Body Lotion">
+			<!---------------------------------------------------->
+			
+			{% comment %} <div><h3>Attach Prescription</h3></div> {% endcomment %}
+		</div>
+		
+	</div>
+	<hr style="border-style: solid; border-color: #006d5b;">
+</div>
+{% load static %}
+
+	<div class="container my-5">
+		<div><h3 style="text-decoration: underline;">Attach Prescription</h3></div> 
+
+	
+		
+		<div class="container overflow-hidden">
+			<div class="row gx-5">
+			  <div class="col">
+				<img src="{% static 'img/valid_prescription.jpg' %}" class="rounded float-start" height="300px" alt="Body Lotion">
+				<p>⦿ Do not crop any part of the prescription</P>
+				<p>⦿ Avoid blurred images</P>
+				<p>⦿ Include details of doctor and patient, date of visit</P>
+				<p>⦿ Supported files: PNG, JPEG, PDF</P>
+			</div>
+			<form action="/upload" method="POST">
+				{% csrf_token %}
+				
+
+
+			  <div class="col my-5 mb-5" style="background-color: #006d5b; border-radius: 25px; box-shadow: 15px 10px #c4c2c2;">
+				<div>
+					<div class="mb-3 my-3">
+						<label for="exampleInputEmail1" class="form-label"></label>
+						<input type="name" name="fullname" id="fullname" class="form-control my-3" placeholder="Fullname" aria-describedby="emailHelp">
+
+						<input type="Number" name="contactnum" id="contactnum" class="form-control" placeholder="Contact Number"  aria-describedby="emailHelp">
+						
+						<div id="emailHelp" class="form-text text-white">We'll never share your Number with anyone else.</div>
+					  </div>
+					<label for="formFileLg" class="form-label text-white">Please upload images of valid prescription from your doctor.</label>
+					<input class="form-control form-control-lg" name="image" id="image" style="background-image: url({% static 'img/upload.png' %}); background-position: 70% 70%;  background-repeat: no-repeat;  background-size: 50px 50px;"  type="file">
+					
+					<input class="btn btn-outline-light btn-lg mx-5 my-5" style="width:120px" type="submit" value="Submit">
+					
+					<input class="btn btn-outline-light btn-lg my-5" style="width:120px" type="reset" value="Reset">
+				  </div>
+				  {% comment %} <label for="formFileLg" class="form-label">Large file input example</label>
+					<button class="form-control form-control-lg" id="formFileLg" type="file">
+						<img src="{% static 'img/upload.png' %}" width="55" />Upload</button> {% endcomment %}
+			  </div>
+			</div>
+		</form>
+		  </div>
+	</div>
+
+{% endblock %}

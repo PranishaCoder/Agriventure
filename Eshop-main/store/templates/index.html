@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+
+{% load custom_filter %}
+<!-- body -->
+<div class="container-fluid mt-3">
+	<div class="row">
+		<!-- filter -->
+		<div class="col-lg-3 mx-auto">
+			<!----------------------------------------------------->
+			
+			<!----------------------------------------------------->
+			<div class="list-group mx-3 my-2">
+				<a href="/" style="text-shadow: 2px 2px 12px #000000; box-shadow: 3px 3px #006d5b;" class="list-group-item list-group-item-action btn btn-outline-success my-2"><b>All Products</b></a>
+				{% for category in categories %}
+				<a href="/?category={{category.id}}"  style=" box-shadow: 3px 3px #006d5b;"
+					class="list-group-item list-group-item-action btn btn-outline-success my-2  "><b>{{category.name}}</b></a>
+				{% endfor %}
+				
+			</div>
+		</div>
+
+		<!-- all products -->
+		<div id='products' class="col-lg-9 mx-auto  ">
+			<!---------------------------------------------------->
+<!--			<a href="store?category=52"><img src="https://www.netmeds.com/images/category/prod/thumb/face_wash_cleansers.png" class="rounded float-start" height="220px" alt="Face Wash And Cleaners"></a>-->
+<!--           <a href="store?category=66"> <img src="https://www.netmeds.com/images/category/prod/thumb/dressing.png" class="rounded float-start" height="220px" alt="Dressing"></a>-->
+<!--		   <a href="store?category=65"><img src="https://www.netmeds.com/images/category/prod/thumb/pain_relief_application.png" class="rounded float-start" height="220px" alt="Pain Relief Application"></a>-->
+<!--		   <a href="store?category=52"><img src="https://www.netmeds.com/images/category/v1/525/thumb/body_care_4.png" class="rounded float-start" height="220px" alt="Body Lotion"></a>-->
+<!--		   <a href="store?category=53"><img src="https://www.netmeds.com/images/category/prod/thumb/hair_care.png" class="rounded float-start" height="220px" alt="Hair Care"></a>-->
+<!--		   <a href="store?category=52"><img src="https://www.netmeds.com/images/category/prod/thumb/skin_care.png" class="rounded float-start" height="220px" alt="Skin Care"></a>-->
+			<!---------------------------------------------------->
+			<div class="row mx-auto ">
+				{% for product in products %}
+				<div class="card mx-auto mb-3 my-3" id={{product.id}} style="width: 20rem; box-shadow: 10px 5px #888888; ">
+					<img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
+					<div class="card-body ">
+						<h5><p class="card-title ">{{product.name}}</p></h5>
+						<p class="card-text" ><h5 style="text-shadow: 2px 2px 10px #006d5b;"><b>{{product.price|currency}}</b></h5></p>
+						<p class="card-text">{{product.description}}</p>
+						<!-- {{product | is_in_cart:request.session.cart }} -->
+					</div>
+
+					<div class="card-footer p-0 no-gutters">
+
+						{% if product|is_in_cart:request.session.cart %}
+						<div class="row  no-gutters ">
+							<form action="/#{{product.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input hidden type="text" name='remove' value='True'>
+								<input type="submit" value=" - " class="btn btn-block btn-success border-right">
+							</form>
+							<div class="text-center col btn btn-success">{{product|cart_quantity:request.session.cart}} in Cart</div>
+							<form action="/#{{product.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+							</form>
+						</div>
+						{% else %}
+						<form action="/#{{product.id}}" method="POST" class="btn-block">
+							{% csrf_token %}
+							<input hidden type="text" name='product' value='{{product.id}}'>
+							<input style="background-color:#006d5b" type="submit" class="float-right btn btn-success form-control"
+								value="Add To Cart">
+						</form>
+						{% endif %}
+
+					</div>
+
+				</div>
+				{% endfor %}
+			</div>
+			{% comment %} <div><h5>sss</h5></h5></div> {% endcomment %}
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

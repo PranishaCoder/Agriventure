@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="container">
+  <h1>🌾 Crop Water Requirement Chatbot</h1>
+  <form id="waterForm">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label for="crop">Select Crop:</label>
+      <select id="crop" name="crop" required>
+        <option value="Corn">Corn</option>
+        <option value="Wheat">Wheat</option>
+        <option value="Rice">Rice</option>
+        <option value="Soybean">Soybean</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="stage">Select Growth Stage:</label>
+      <select id="stage" name="stage" required>
+        <option value="Seeding">Seeding</option>
+        <option value="Vegetative">Vegetative</option>
+        <option value="Flowering">Flowering</option>
+        <option value="Maturity">Maturity</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="location">Enter Location:</label>
+      <input type="text" id="location" name="location" required>
+    </div>
+
+    <div class="form-group">
+      <label for="moisture">Current Soil Moisture (%):</label>
+      <input type="number" id="moisture" name="moisture" min="0" max="100" value="65" required>
+    </div>
+
+    <div class="form-group">
+      <label for="humidity">Current Humidity (%):</label>
+      <input type="number" id="humidity" name="humidity" min="0" max="100" value="50" required>
+    </div>
+
+    <div class="form-group">
+      <label for="temperature">Current Temperature (°C):</label>
+      <input type="number" id="temperature" name="temperature" min="-10" max="60" value="30" required>
+    </div>
+
+    <button type="submit">💧 Get Water Requirement</button>
+  </form>
+
+  <div id="moistureData"></div>
+  <canvas id="moistureChart" width="400" height="200"></canvas>
+  <div id="result"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.getElementById("waterForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const crop = document.getElementById("crop").value;
+    const stage = document.getElementById("stage").value;
+    const location = document.getElementById("location").value;
+    const moisture = document.getElementById("moisture").value;
+    const humidity = document.getElementById("humidity").value;
+    const temperature = document.getElementById("temperature").value;
+
+    const payload = { crop, stage, location, moisture, humidity, temperature };
+
+    document.getElementById("result").innerHTML = "⏳ Getting prediction...";
+    document.getElementById("moistureData").innerHTML = "";
+
+    try {
+      const res = await fetch("{% url 'predict1' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      if (window.moistureChartInstance) {
+        window.moistureChartInstance.destroy();
+      }
+
+      const ctx = document.getElementById("moistureChart").getContext("2d");
+      window.moistureChartInstance = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: data.moisture_time_labels,
+          datasets: [{
+            label: "Soil Moisture Forecast (%)",
+            data: data.moisture_levels,
+            borderColor: "#3b82f6",
+            backgroundColor: "#bfdbfe",
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+
+      document.getElementById("moistureData").innerHTML =
+        `<strong>5-hour Forecast:</strong> ${data.moisture_levels.join(" %, ")} %`;
+
+      document.getElementById("result").innerHTML =
+        `<strong>Prediction:</strong><br>${data.result}`;
+    } catch (err) {
+      document.getElementById("result").innerText = "❌ Error: " + err.message;
+    }
+  });
+</script>
+
+<style>
+  body {
+    background: linear-gradient(to right, #e0f7fa, #fff3e0);
+    font-family: 'Segoe UI', sans-serif;
+    padding: 0;
+    margin: 0;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    text-align: center;
+    color: #2e7d32;
+    margin-bottom: 25px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #555;
+  }
+
+  input, select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background-color: #1b5e20;
+  }
+
+  #moistureData, #result {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  canvas {
+    margin-top: 25px;
+  }
+</style>
+{% endblock %}
