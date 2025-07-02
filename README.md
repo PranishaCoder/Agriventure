@@ -1,8 +1,4 @@
-Here's the updated README with the changes you requested:
-
----
-
-# Smart Irrigation System
+# Agriventure : Smart Irrigation System
 
 ## Overview
 
@@ -87,17 +83,7 @@ We welcome contributions! To contribute:
 4. Push to the branch (`git push origin feature-name`).
 5. Submit a pull request.
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Let me know if you'd like to make any further adjustments!
-
-
-* Admin login to check Data Base - (username- admin2) (password - 12345) 
-* User login  - (username- yash@gmail.com) (password - 12345) 
 
 
 # plant-disease-prediction-cnn-deep-leanring-project
